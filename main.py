@@ -1,41 +1,47 @@
+import fitz  # PyMuPDF
 from google.cloud import texttospeech
+from google.oauth2 import service_account
 
 
-def synthesize_text(text):
-    """Synthesizes speech from the input string of text."""
-    client = texttospeech.TextToSpeechClient()
+def extract_text_from_pdf(pdf_path):
+    text = ""
+    with fitz.open(pdf_path) as pdf_document:
+        for page_number in range(pdf_document.page_count):
+            page = pdf_document[page_number]
+            text += page.get_text()
+    return text
 
-    input_text = texttospeech.SynthesisInput(text=text)
 
-    # Note: the voice can also be specified by name.
-    # Names of voices can be retrieved with client.list_voices().
+def text_to_speech(text, output_file="output.mp3", language_code="en-US", voice_name="en-US-Wavenet-D"):
+    # Replace 'path/to/your/keyfile.json' with the actual path to your service account key file
+    credentials = service_account.Credentials.from_service_account_file('phonic-vortex-404823-8cffe46ce347.json')
+
+    client = texttospeech.TextToSpeechClient(credentials=credentials)
+
+    synthesis_input = texttospeech.SynthesisInput(text=text)
+
     voice = texttospeech.VoiceSelectionParams(
-        language_code="en-US",
-        name="en-US-Standard-C",
-        ssml_gender=texttospeech.SsmlVoiceGender.FEMALE,
+        language_code=language_code,
+        name=voice_name,
+        ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
     )
 
     audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3
+        audio_encoding=texttospeech.AudioEncoding.LINEAR16
     )
 
     response = client.synthesize_speech(
-        request={"input": input_text, "voice": voice, "audio_config": audio_config}
+        input=synthesis_input,
+        voice=voice,
+        audio_config=audio_config
     )
 
-    # The response's audio_content is binary.
-    with open("output.mp3", "wb") as out:
-        out.write(response.audio_content)
-        print('Audio content written to file "output.mp3"')
+    with open(output_file, "wb") as out_file:
+        out_file.write(response.audio_content)
+
+    print(f'Audio content written to file "{output_file}"')
 
 
-text = "Hello, how are you today?"
-synthesize_text(text)
-# TODO Upload PDF File
-
-# TODO Read the File
-
-# TODO Send File to API
-
-# TODO Play Audio File
-
+pdf_path = "path/to/your/pdf_file.pdf"
+text = extract_text_from_pdf(pdf_path)
+text_to_speech(text)
