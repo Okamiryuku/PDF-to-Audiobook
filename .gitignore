@@ -119,6 +119,9 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+phonic-vortex-404823-8cffe46ce347.json
+output.mp3
+
 # Environments
 .env
 .venv
