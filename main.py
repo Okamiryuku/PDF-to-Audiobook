@@ -42,6 +42,6 @@ def text_to_speech(text, output_file="output.mp3", language_code="en-US", voice_
     print(f'Audio content written to file "{output_file}"')
 
 
-pdf_path = "path/to/your/pdf_file.pdf"
+pdf_path = "Test PDF-8mb.pdf"
 text = extract_text_from_pdf(pdf_path)
 text_to_speech(text)
