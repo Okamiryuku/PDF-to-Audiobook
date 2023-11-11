@@ -14,7 +14,7 @@ def extract_text_from_pdf(pdf_path):
 
 def text_to_speech(text, output_file="output.mp3", language_code="en-US", voice_name="en-US-Wavenet-D"):
 
-    credentials = service_account.Credentials.from_service_account_file('phonic-vortex-404823-8cffe46ce347.json')
+    credentials = service_account.Credentials.from_service_account_file('your api credentials')
 
     client = texttospeech.TextToSpeechClient(credentials=credentials)
 
