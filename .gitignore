@@ -119,8 +119,10 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+# project secret files
 phonic-vortex-404823-8cffe46ce347.json
 output.mp3
+Test PDF-8mb.pdf
 
 # Environments
 .env
